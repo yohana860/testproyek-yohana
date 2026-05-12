@@ -1,0 +1,9 @@
+8
+Aaron 50 DivA KNIGHT
+Boris 60 DivB SERGEANT
+Crane 70 DivC CAPTAIN
+Dorian 80 DivD GENERAL
+Elric 90 DivE GENERAL
+Falco 40 DivF KNIGHT
+Gareth 30 DivG SERGEANT
+Harlan 20 DivH CAPTAIN

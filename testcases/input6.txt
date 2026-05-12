@@ -1,0 +1,11 @@
+10
+Zack 100 Fire GENERAL
+Yara 80 Fire CAPTAIN
+Xena 60 Fire SERGEANT
+Wade 40 Fire KNIGHT
+Vera 20 Fire KNIGHT
+Uma 90 Water GENERAL
+Troy 70 Water CAPTAIN
+Sven 50 Water SERGEANT
+Rose 30 Water KNIGHT
+Quinn 10 Water KNIGHT

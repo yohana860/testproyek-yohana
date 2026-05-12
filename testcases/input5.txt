@@ -1,0 +1,11 @@
+10
+Arlo 10 Iron KNIGHT
+Blake 30 Iron SERGEANT
+Cass 50 Iron CAPTAIN
+Dale 70 Iron GENERAL
+Evan 90 Iron GENERAL
+Flora 20 Steel KNIGHT
+Grant 40 Steel SERGEANT
+Hana 60 Steel CAPTAIN
+Iris 80 Steel GENERAL
+Juno 100 Steel GENERAL

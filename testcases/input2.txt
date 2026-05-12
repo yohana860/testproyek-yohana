@@ -1,0 +1,11 @@
+10
+Ajax 95 Omega GENERAL
+Bran 30 Omega KNIGHT
+Cole 75 Omega CAPTAIN
+Drake 55 Omega SERGEANT
+Erik 85 Omega GENERAL
+Finn 45 Omega KNIGHT
+Gale 65 Omega SERGEANT
+Holt 25 Omega KNIGHT
+Ivan 90 Omega CAPTAIN
+Jace 35 Omega SERGEANT

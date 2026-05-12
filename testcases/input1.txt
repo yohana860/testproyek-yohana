@@ -1,0 +1,7 @@
+6
+Aldric 90 Alpha CAPTAIN
+Borin 40 Beta KNIGHT
+Cedric 70 Alpha SERGEANT
+Dwyn 20 Beta KNIGHT
+Edric 80 Alpha GENERAL
+Fynn 60 Beta CAPTAIN
