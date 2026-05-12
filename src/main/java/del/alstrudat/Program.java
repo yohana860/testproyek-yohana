@@ -45,8 +45,6 @@ public class Program {
         }
 
         private void setClassification(double s) {
-            // Gunakan margin error kecil untuk perbandingan kategori jika diperlukan, 
-            // tapi standar perbandingan double cukup di sini.
             if (s > 100) { status = "CATASTROPHIC"; priority = 0; }
             else if (s > 50) { status = "CHAOS"; priority = 1; }
             else if (s > 20) { status = "MESSY"; priority = 2; }
@@ -62,16 +60,16 @@ public class Program {
                                        soldiersData[i][2], soldiersData[i][3]);
         }
 
-        // Urutkan berdasarkan divisi (stable) untuk mengelompokkan
+        // Step 1: Group divisions while maintaining original relative order (Stable Sort)
         stableMergeSort(soldiers, 0, n - 1);
 
         DivisionReport[] reports = new DivisionReport[n];
-        int reportCount = 0;
+        int reportIdx = 0;
 
         int i = 0;
         while (i < n) {
             int j = i;
-            long sumStrength = 0;
+            double sumStrength = 0;
             while (j < n && soldiers[j].division.equals(soldiers[i].division)) {
                 sumStrength += soldiers[j].strength;
                 j++;
@@ -83,25 +81,24 @@ public class Program {
                 divMembers[k] = soldiers[i + k];
             }
 
-            // Hitung weighted inversion menggunakan long untuk presisi
-            long weightedInv = countWeightedInversions(divMembers, 0, count - 1);
-            double avgStrength = (double) sumStrength / count;
-            double chaosScore = (weightedInv * avgStrength) / (double) ((long) count * count);
+            double weightedInv = countWeightedInversions(divMembers, 0, count - 1);
+            double avgStrength = sumStrength / count;
+            double chaosScore = (weightedInv * avgStrength) / (double) (count * count);
+            if (count == 0) chaosScore = 0;
 
-            reports[reportCount++] = new DivisionReport(soldiers[i].division, chaosScore, count);
+            reports[reportIdx++] = new DivisionReport(soldiers[i].division, chaosScore, count);
             i = j;
         }
 
-        // Urutkan laporan sesuai aturan Tahap 4
-        quickSortReports(reports, 0, reportCount - 1);
+        // Step 2: Final Report Sorting
+        quickSortReports(reports, 0, reportIdx - 1);
 
+        // Step 3: Print and KSI Calculation
         int ksi = 0;
         System.out.println("Divisi Status ChaosScore Prajurit");
-        for (int k = 0; k < reportCount; k++) {
+        for (int k = 0; k < reportIdx; k++) {
             DivisionReport r = reports[k];
-            // Tambahkan pengurangan epsilon (1e-9) untuk menangani pembulatan .005 ke bawah 
-            // agar sesuai dengan ekspektasi test case (2.625 -> 2.62)
-            System.out.printf(Locale.US, "%s %s %.2f %d\n", r.name, r.status, r.score - 1e-11, r.soldierCount);
+            System.out.printf(Locale.US, "%s %s %.2f %d\n", r.name, r.status, r.score, r.soldierCount);
             
             switch (r.status) {
                 case "ORDERED": ksi += 3; break;
@@ -116,6 +113,8 @@ public class Program {
         String kingdomStatus = (ksi > 0) ? "STABLE" : (ksi == 0 ? "CRITICAL" : "DOOMED");
         System.out.println("KINGDOM STATUS: " + kingdomStatus);
     }
+
+    // --- HELPER METHODS ---
 
     private static void stableMergeSort(Soldier[] arr, int l, int r) {
         if (l < r) {
@@ -140,8 +139,8 @@ public class Program {
         while (j < n2) arr[k++] = R[j++];
     }
 
-    private static long countWeightedInversions(Soldier[] arr, int l, int r) {
-        long count = 0;
+    private static double countWeightedInversions(Soldier[] arr, int l, int r) {
+        double count = 0;
         if (l < r) {
             int m = l + (r - l) / 2;
             count += countWeightedInversions(arr, l, m);
@@ -151,27 +150,27 @@ public class Program {
         return count;
     }
 
-    private static long mergeAndCount(Soldier[] arr, int l, int m, int r) {
+    private static double mergeAndCount(Soldier[] arr, int l, int m, int r) {
         int n1 = m - l + 1, n2 = r - m;
         Soldier[] L = new Soldier[n1], R = new Soldier[n2];
         for (int i = 0; i < n1; i++) L[i] = arr[l + i];
         for (int i = 0; i < n2; i++) R[i] = arr[m + 1 + i];
 
-        long leftSumStrWeight = 0, leftSumWeight = 0;
+        double leftSumStrWeight = 0, leftSumWeight = 0;
         for (int k = 0; k < n1; k++) {
-            leftSumStrWeight += (long) L[k].strength * L[k].weight;
-            leftSumWeight += L[k].weight;
+            leftSumStrWeight += (double) L[k].strength * L[k].weight;
+            leftSumWeight += (double) L[k].weight;
         }
 
-        long inversions = 0;
+        double inversions = 0;
         int i = 0, j = 0, k = l;
         while (i < n1 && j < n2) {
             if (L[i].strength <= R[j].strength) {
-                leftSumStrWeight -= (long) L[i].strength * L[i].weight;
-                leftSumWeight -= L[i].weight;
+                leftSumStrWeight -= (double) L[i].strength * L[i].weight;
+                leftSumWeight -= (double) L[i].weight;
                 arr[k++] = L[i++];
             } else {
-                inversions += (long) R[j].weight * (leftSumStrWeight - (long) R[j].strength * leftSumWeight);
+                inversions += (double) R[j].weight * (leftSumStrWeight - (double) R[j].strength * leftSumWeight);
                 arr[k++] = R[j++];
             }
         }
@@ -212,3 +211,4 @@ public class Program {
         return a.name.compareTo(b.name);
     }
 }
+//
