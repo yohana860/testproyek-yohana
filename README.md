@@ -1,4 +1,4 @@
-# alstrudat-cXX-USERNAME
+# alstrudat-c01-USERNAME
 
 ## Description
 
