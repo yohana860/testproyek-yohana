@@ -2,74 +2,100 @@
 
 ## Description
 
-Implementasikan sistem **Median dari Stream Data** menggunakan **dua Heap** (Max-Heap dan Min-Heap) secara manual (array-based, tanpa PriorityQueue Java), sekaligus tampilkan **K elemen terbesar** menggunakan Min-Heap.
+**THE INVERTED KINGDOM: WAR OF CHAOS**
 
-### Detail Soal
+Diberikan N prajurit dengan atribut `nama`, `kekuatan`, `divisi`, dan `rank`. Implementasikan sistem analisis kekacauan kerajaan menggunakan **Merge Sort** (weighted inversion) dan **Quick Sort** (multi-key sorting).
 
-Diberikan sebuah stream bilangan bulat sebanyak **N** elemen. Setelah setiap elemen dimasukkan, cetak **median** dari semua elemen yang telah masuk sejauh ini:
-- Jika jumlah elemen **ganjil**: cetak bilangan bulat (integer)
-- Jika jumlah elemen **genap**: cetak rata-rata dua tengah sebagai **double dengan 1 desimal** (contoh: `4.0`, `3.5`)
+### Rank Weight
+| Rank | Weight |
+|------|--------|
+| KNIGHT | 1 |
+| SERGEANT | 2 |
+| CAPTAIN | 3 |
+| GENERAL | 4 |
 
-Setelah seluruh elemen diproses, cetak **K elemen terbesar** dalam urutan menurun pada baris terakhir.
+### Tahap 1 — Weighted Inversion Count (Merge Sort)
+Untuk setiap pasangan (i,j) dalam divisi yang sama di mana `i < j` dan `kekuatan[i] > kekuatan[j]`:
+```
+weighted_inv += (kekuatan[i] - kekuatan[j]) × rank_weight[i] × rank_weight[j]
+```
+Urutan prajurit dalam divisi = urutan kemunculan di input.
 
-### Format Input
+### Tahap 2 — Chaos Score
+```
+chaos_score = (weighted_inv × avg_kekuatan) / (n_divisi²)
+```
+
+### Tahap 3 — Klasifikasi
+| Score | Status |
+|-------|--------|
+| > 100 | CATASTROPHIC |
+| 50 < s ≤ 100 | CHAOS |
+| 20 < s ≤ 50 | MESSY |
+| 0 < s ≤ 20 | UNSTABLE |
+| = 0 | ORDERED |
 
 ```
+KSI = (ORDERED×3) - (CATASTROPHIC×5) - (CHAOS×3) - (MESSY×2) - (UNSTABLE×1)
+KINGDOM STATUS: STABLE (KSI>0) | CRITICAL (KSI=0) | DOOMED (KSI<0)
+```
+
+### Tahap 4 — Quick Sort Laporan (multi-key)
+1. Status: CATASTROPHIC → CHAOS → MESSY → UNSTABLE → ORDERED
+2. Chaos Score **descending**
+3. Jumlah prajurit **ascending**
+4. Nama divisi **alphabetically**
+
+### Format Input
+```
 N
-elemen_1
-elemen_2
+nama kekuatan divisi rank
 ...
-elemen_N
-K
 ```
 
 ### Format Output
-
 ```
-median_setelah_elemen_1
-median_setelah_elemen_2
+Divisi Status ChaosScore Prajurit
+[nama] [status] [score 2 desimal] [jumlah]
 ...
-median_setelah_elemen_N
-K Largest: x1 x2 ... xK
+KSI: [nilai]
+KINGDOM STATUS: [STABLE/CRITICAL/DOOMED]
 ```
 
 ### Constraint
-
-- 1 ≤ N ≤ 10⁴
-- 1 ≤ K ≤ N
-- -10⁶ ≤ elemen ≤ 10⁶
-- **Wajib menggunakan Heap manual (array-based)**, bukan PriorityQueue Java
+- 1 ≤ N ≤ 10.000
+- **WAJIB** implementasi Merge Sort manual untuk weighted inversion
+- **WAJIB** implementasi Quick Sort manual untuk sorting laporan
+- **DILARANG** menggunakan Collections.sort(), Arrays.sort(), atau library sort apapun
 
 ## Source Codes
 
-| No | File         | Deskripsi                                         |
-|----|--------------|---------------------------------------------------|
-| 1  | App.java     | Entry point, membaca input                        |
-| 2  | Program.java | Implementasikan `solve()` menggunakan dua Heap    |
+| No | File | Deskripsi |
+|----|------|-----------|
+| 1 | App.java | Entry point, membaca input |
+| 2 | Program.java | Implementasikan `solve()` di sini |
 
 ## Test Cases
 
-| No | Input (N, stream, K)                          | Output Akhir (Medians + K Largest)                                              |
-|----|-----------------------------------------------|---------------------------------------------------------------------------------|
-| 1  | N=5, [5,3,8,1,9], K=3                         | 5, 4.0, 5, 4.0, 5 → K Largest: 9 8 5                                           |
-| 2  | N=2, [2,4], K=1                               | 2, 3.0 → K Largest: 4                                                           |
-| 3  | N=1, [7], K=1                                 | 7 → K Largest: 7                                                                |
-| 4  | N=4, [10,10,10,10], K=2                       | 10, 10.0, 10, 10.0 → K Largest: 10 10                                          |
-| 5  | N=10, [1..10], K=4                            | 1,1.5,2,...,5.5 → K Largest: 10 9 8 7                                          |
-| 6  | N=10, [10..1], K=3                            | 10,9.5,9,...,5.5 → K Largest: 10 9 8                                           |
-| 7  | N=6, [100,1,50,25,75,10], K=2                 | 100,50.5,50,37.5,50,37.5 → K Largest: 100 75                                   |
-| 8  | N=5, [-5,-1,-3,-2,-4], K=2                    | -5,-3.0,-3,-2.5,-3 → K Largest: -1 -2                                          |
-| 9  | N=10, [3,1,4,1,5,9,2,6,5,3], K=5             | 3,2.0,3,2.0,3,3.5,3,3.5,4,3.5 → K Largest: 9 6 5 5 4                         |
-| 10 | N=10, [1000,500,750,250,875,125,625,375,812,438], K=4 | ... → K Largest: 1000 875 812 750                                    |
+| No | Skenario | N | Divisi |
+|----|----------|---|--------|
+| 1 | Warmup — 2 divisi kecil | 6 | 2 |
+| 2 | Single divisi — semua prajurit satu divisi | 10 | 1 |
+| 3 | Semua divisi berbeda — setiap prajurit sendiri | 8 | 8 |
+| 4 | Kekuatan identik semua — edge case inversion=0 | 8 | 2 |
+| 5 | Already sorted ascending — semua ORDERED | 10 | 2 |
+| 6 | Perfectly reversed descending — semua CATASTROPHIC | 10 | 2 |
+| 7 | **N=5000** — brute force O(n²) timeout | 5000 | 5 |
+| 8 | Chaos Score tepat di batas klasifikasi | 16 | 5 |
+| 9 | 10 divisi semua CHAOS — uji 4 kunci Quick Sort | 20 | 10 |
+| 10 | **Full Chaos** — N=3024, 15 divisi, semua status | 3024 | 15 |
 
 ## Compile
-
 ```bash
 mvn clean package
 ```
 
 ## Run
-
 ```bash
 java -cp target/app.jar del.alstrudat.App
 ```
